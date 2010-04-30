@@ -1,0 +1,4 @@
+== Baseball Data
+
+Collection of tools for working with baseball data from various sources.
+
