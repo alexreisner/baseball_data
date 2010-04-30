@@ -2,6 +2,8 @@
 # This table is suitable for storing the output of 'cwgame,' a Retrosheet
 # event log parser, part of Chadwick (http://chadwick.sourceforge.net).
 # This is written for MySQL (it is not database-agnostic).
+# For column descriptions see:
+# http://chadwick.sourceforge.net/chapter1.html#cwgame-game-information-extractor
 #
 DROP TABLE IF EXISTS games;
 CREATE TABLE `games` (
