@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+#
+# This script takes a directory containing some Retrosheet event log
+# archives (eg: 2008ml.zip, 2007ml.zip) and loads all data into a CSV file
+# via Chadwick. Specify the input directory and output file as arguments.
+#
+# You must have Chadwick's 'cwevent' utility properly installed. See:
+#   http://chadwick.sourceforge.net
+#
+# Retrosheet event logs can be downloaded from:
+#   http://www.retrosheet.org/game.htm
+#
+# Example usage:
+#   load_events eventlogs events.csv
+#
+
+ZIPDIR=$1
+TMPDIR="tmp$RANDOM"
+OUTFILE=`pwd`/"$2"
+
+# unzip archives to temp dir
+cd $ZIPDIR
+unzip \*.zip -d $TMPDIR
+
+# run each event file through Chadwick
+cd $TMPDIR
+for f in *.EV*
+do cwevent -f 0-96 -y ${f:0:4} $f >> $OUTFILE; done
+
+# clean up
+rm *
+cd ..
+rmdir $TMPDIR
+
+exit 0
