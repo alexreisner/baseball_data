@@ -11,7 +11,7 @@
 #   http://www.retrosheet.org/game.htm
 #
 # Example usage:
-#   load_events eventlogs events.csv
+#   events_to_csv ~/eventlogs events.csv
 #
 
 ZIPDIR=$1
@@ -24,8 +24,9 @@ unzip \*.zip -d $TMPDIR
 
 # run each event file through Chadwick
 cd $TMPDIR
-for f in *.EV*
-do cwevent -f 0-96 -y ${f:0:4} $f >> $OUTFILE; done
+for f in *.EV*; do
+  cwevent -f 0-96 -y ${f:0:4} $f >> $OUTFILE
+done
 
 # clean up
 rm *
