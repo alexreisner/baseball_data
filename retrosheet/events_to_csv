@@ -14,9 +14,26 @@
 #   events_to_csv ~/eventlogs events.csv
 #
 
-ZIPDIR=$1
+show_usage() {
+  echo "Usage: events_to_csv INPUT_DIR [OUTPUT_FILE]"
+}
+
+# exit if no INTPUT_DIR given
+if [[ $1 == "" ]]; then
+  show_usage
+  exit 1
+else
+  ZIPDIR=$1
+fi
+
+# choose a reasonable default OUTPUT_FILE if none given
+if [[ $2 == "" ]]; then
+  OUTFILE=`pwd`/events.csv
+else
+  OUTFILE=`pwd`/"$2"
+fi
+
 TMPDIR="tmp$RANDOM"
-OUTFILE=`pwd`/"$2"
 
 # unzip archives to temp dir
 cd $ZIPDIR
