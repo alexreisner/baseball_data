@@ -19,7 +19,7 @@ show_usage() {
 }
 
 # exit if no INTPUT_DIR given
-if [[ $1 == "" ]]; then
+if [[ -z $1 ]]; then
   show_usage
   exit 1
 else
@@ -27,7 +27,7 @@ else
 fi
 
 # choose a reasonable default OUTPUT_FILE if none given
-if [[ $2 == "" ]]; then
+if [[ -z $2 ]]; then
   OUTFILE="$(pwd)/events.csv"
 else
   OUTFILE="$(pwd)/$2"
