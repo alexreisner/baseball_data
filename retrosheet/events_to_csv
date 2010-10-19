@@ -28,9 +28,9 @@ fi
 
 # choose a reasonable default OUTPUT_FILE if none given
 if [[ $2 == "" ]]; then
-  OUTFILE=`pwd`/events.csv
+  OUTFILE="$(pwd)/events.csv"
 else
-  OUTFILE=`pwd`/"$2"
+  OUTFILE="$(pwd)/$2"
 fi
 
 TMPDIR="tmp$RANDOM"
