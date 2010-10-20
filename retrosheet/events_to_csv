@@ -23,7 +23,12 @@ if [[ -z "$1" ]]; then
   show_usage
   exit 1
 else
-  zipdir="$1"
+  if [[ -d "$1" ]]; then
+    zipdir="$1"
+  else
+    echo "Directory $1 not found"
+    exit 1
+  fi
 fi
 
 # choose a reasonable default OUTPUT_FILE if none given
