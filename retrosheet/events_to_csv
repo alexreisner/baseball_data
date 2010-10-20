@@ -23,31 +23,31 @@ if [[ -z "$1" ]]; then
   show_usage
   exit 1
 else
-  ZIPDIR="$1"
+  zipdir="$1"
 fi
 
 # choose a reasonable default OUTPUT_FILE if none given
 if [[ -z "$2" ]]; then
-  OUTFILE="$(pwd)/events.csv"
+  outfile="$(pwd)/events.csv"
 else
-  OUTFILE="$(pwd)/$2"
+  outfile="$(pwd)/$2"
 fi
 
-TMPDIR="tmp$RANDOM"
+tmpdir="tmp$RANDOM"
 
 # unzip archives to temp dir
-cd "$ZIPDIR"
-unzip \*.zip -d "$TMPDIR"
+cd "$zipdir"
+unzip \*.zip -d "$tmpdir"
 
 # run each event file through Chadwick
-cd "$TMPDIR"
+cd "$tmpdir"
 for f in *.EV*; do
-  cwevent -f 0-96 -y ${f:0:4} $f >> "$OUTFILE"
+  cwevent -f 0-96 -y ${f:0:4} $f >> "$outfile"
 done
 
 # clean up
 rm *
 cd ..
-rmdir "$TMPDIR"
+rmdir "$tmpdir"
 
 exit 0
