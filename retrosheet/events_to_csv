@@ -33,9 +33,9 @@ fi
 
 # choose a reasonable default OUTPUT_FILE if none given
 if [[ -z "$2" ]]; then
-  outfile="$(pwd)/events.csv"
+  outfile="$PWD/events.csv"
 else
-  outfile="$(pwd)/$2"
+  outfile="$PWD/$2"
 fi
 
 tmpdir="tmp$RANDOM"
