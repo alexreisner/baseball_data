@@ -175,7 +175,7 @@ CREATE TABLE `games` (
 #
 # Load game data.
 #
-LOAD DATA INFILE '/path/to/data.csv'
+LOAD DATA LOCAL INFILE '/path/to/data.csv'
   INTO TABLE games
   FIELDS TERMINATED BY ','
   OPTIONALLY ENCLOSED BY '"'
