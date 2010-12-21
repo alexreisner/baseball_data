@@ -1,9 +1,11 @@
 --
 -- This table is suitable for storing the output of 'cwevent,' a Retrosheet
 -- event log parser, part of Chadwick (http://chadwick.sourceforge.net).
--- This is written for MySQL (it is not database-agnostic).
+--
 -- For column descriptions see:
--- http://chadwick.sourceforge.net/chapter1.html--cwevent-expanded-event-descriptor
+-- http://chadwick.sourceforge.net/chapter1.html#cwevent-expanded-event-descriptor
+--
+-- This script is written for MySQL (it is not database-agnostic).
 --
 DROP TABLE IF EXISTS events;
 CREATE TABLE events (
