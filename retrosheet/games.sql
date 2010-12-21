@@ -1,10 +1,10 @@
-#
-# This table is suitable for storing the output of 'cwgame,' a Retrosheet
-# event log parser, part of Chadwick (http://chadwick.sourceforge.net).
-# This is written for MySQL (it is not database-agnostic).
-# For column descriptions see:
-# http://chadwick.sourceforge.net/chapter1.html#cwgame-game-information-extractor
-#
+--
+-- This table is suitable for storing the output of 'cwgame,' a Retrosheet
+-- event log parser, part of Chadwick (http://chadwick.sourceforge.net).
+-- This is written for MySQL (it is not database-agnostic).
+-- For column descriptions see:
+-- http://chadwick.sourceforge.net/chapter1.html#cwgame-game-information-extractor
+--
 DROP TABLE IF EXISTS games;
 CREATE TABLE `games` (
   `date` date NOT NULL default '0000-00-00',
@@ -172,9 +172,9 @@ CREATE TABLE `games` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 
-#
-# Load game data.
-#
+--
+-- Load game data.
+--
 LOAD DATA LOCAL INFILE '/path/to/data.csv'
   INTO TABLE games
   FIELDS TERMINATED BY ','
