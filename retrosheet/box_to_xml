@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+#
+# Batch process Retrosheet event/boxscore files through cwbox.
+#
+# This script takes a directory containing Retrosheet event log and boxscore
+# archives (eg: 2008ml.zip, 2007ml.zip) and loads all data into an XML file
+# via Chadwick. Specify the input directory and output file as arguments.
+#
+# You must have Chadwick's 'cwbox' utility properly installed. See:
+#   http://chadwick.sourceforge.net
+#
+# Retrosheet event logs can be downloaded from:
+#   http://www.retrosheet.org/game.htm
+#
+# Example usage:
+#   box_to_xml ~/boxscores games.xml
+#
+
+show_usage() {
+  echo "Usage: box_to_xml INPUT_DIR [OUTPUT_FILE]"
+}
+
+# exit if no INTPUT_DIR given
+if [[ -z "$1" ]]; then
+  show_usage
+  exit 1
+else
+  if [[ -d "$1" ]]; then
+    zipdir="$1"
+  else
+    echo "Directory $1 not found"
+    exit 1
+  fi
+fi
+
+# choose a reasonable default OUTPUT_FILE if none given
+if [[ -z "$2" ]]; then
+  outfile="$PWD/games.xml"
+else
+  outfile="$PWD/$2"
+fi
+
+tmpdir="tmp$RANDOM"
+
+# unzip archives to temp dir
+cd "$zipdir"
+unzip \*.zip -d "$tmpdir"
+
+# run each event/boxscore file through Chadwick
+cd "$tmpdir"
+echo "<boxscores>" > "$outfile"
+for f in *.E*; do
+  cwbox -y ${f:0:4} -X $f >> "$outfile"
+done
+echo "</boxscores>" >> "$outfile"
+
+# clean up
+rm *
+cd ..
+rmdir "$tmpdir"
+
+exit 0
