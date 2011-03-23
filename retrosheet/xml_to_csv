@@ -6,6 +6,21 @@
 #
 #   xml_to_csv <batters|pitchers> <xml_file>
 #
+#
+# To load batter data from output into MySQL database:
+#
+#   LOAD DATA LOCAL INFILE '...' INTO TABLE batting_games FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 0 LINES;
+#
+# Then convert Retrosheet player ids to BDB ids:
+#   UPDATE batting_games bg INNER JOIN players p ON bg.player_id = p.retro_id SET bg.player_id = p.id;
+#
+#
+# To load pitcher data into MySQL database
+#   LOAD DATA LOCAL INFILE '...' INTO TABLE pitching_games FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 0 LINES;
+#
+# Then convert Retrosheet player ids to BDB ids:
+#   UPDATE pitching_games bg INNER JOIN players p ON bg.player_id = p.retro_id SET bg.player_id = p.id;
+#
 
 require 'rubygems'
 require 'nokogiri'
@@ -124,11 +139,3 @@ end
 klass = @type == 'batters' ? BatterGame : PitcherGame
 parser = Nokogiri::XML::SAX::Parser.new(klass.new)
 parser.parse_file(File.join(ARGV[1]))
-
-
-# load into MySQL database
-#LOAD DATA LOCAL INFILE '...' INTO TABLE batting_games FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 0 LINES;
-#
-# convert Retrosheet player ids to BDB ids
-#UPDATE batting_games bg INNER JOIN players p ON bg.player_id = p.retro_id SET bg.player_id = p.id;
-
