@@ -12,7 +12,13 @@
 #
 
 use Getopt::Std;
-getopt('yl');
+getopts('hy:l:');
+
+# help
+if ($opt_h) {
+  print "Usage: spider [-y <year>] [-l <league>]\n";
+  exit;
+}
 
 # year
 $y = $opt_y;
