@@ -10,9 +10,17 @@
 # * it does *not* download players.txt or batter/pitcher files
 # * it *does* download: game.xml, gameday_Syn.xml, linescore.xml
 #
+
+# parse arguments
+$y = $ARGV[0];
+die "please specify a year\n" if ($y eq "");
+
+$lg = $ARGV[1];
+$lg = "mlb" if ($lg eq "");
+
 use LWP;
 my $browser = LWP::UserAgent->new;
-$baseurl = "http://gdx.mlb.com/components/game/mlb";
+$baseurl = "http://gdx.mlb.com/components/game/" . $lg;
 $outputdir = "./games";
 
 use Time::Local;
@@ -39,9 +47,6 @@ sub verifyDir($) {
     die "could not create $d: $!\n" unless (mkdir $d);
   }
 }
-
-$y = $ARGV[0];
-die "please specify a year\n" if ($y == "");
 
 # get all important files Mar 1 through Nov 10
 $start = timelocal(0,0,0,20,2,$y-1900);
