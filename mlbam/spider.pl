@@ -102,6 +102,22 @@ for ($t = $start; $t < $now; $t += 60*60*24) {
       }
 
 
+      # players.xml
+      if($gamehtml =~ m/<a href=\"players\.xml\"/ ) {
+        $fileurl = "$dayurl/$game/players.xml";
+        $response = $browser->get($fileurl);
+        print "Couldn't get $fileurl: ", $response->status_line, "\n"
+          unless $response->is_success;
+        $html = $response->content;
+        open FILE, ">$gamedir/players.xml"
+          or die "could not open file $gamedir/players.xml: $|\n";
+        print FILE $html;
+        close FILE;
+      } else {
+        print "warning: no players file for $game\n";
+      }
+
+
       # game.xml
       if($gamehtml =~ m/<a href=\"game\.xml\"/ ) {
         $fileurl = "$dayurl/$game/game.xml";
