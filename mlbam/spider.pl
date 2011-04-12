@@ -11,12 +11,20 @@
 # * it *does* download: game.xml, gameday_Syn.xml, linescore.xml
 #
 
-# parse arguments
-$y = $ARGV[0];
-die "please specify a year\n" if ($y eq "");
+use Getopt::Std;
+getopt('yl');
 
-$lg = $ARGV[1];
+# year
+$y = $opt_y;
+if ($y eq "") {
+  ($s,$mn,$h,$d,$m,$y,$wd,$yd,$dst) = localtime(time);
+  $y = $y + 1900; # default to current year
+}
+
+# league (mlb, aaa, etc)
+$lg = $opt_l;
 $lg = "mlb" if ($lg eq "");
+
 
 use LWP;
 my $browser = LWP::UserAgent->new;
