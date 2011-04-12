@@ -3,6 +3,7 @@
 # This script has been modified from the one included with the Baseball Hacks
 # book in the following ways:
 #
+# * it requires a year to be passed on the command line
 # * it will not die on a transfer error, so be sure to save output
 #   to a log file and read carefully to get any missed files
 # * it does *not* download players.txt or batter/pitcher files
@@ -38,8 +39,10 @@ sub verifyDir($) {
   }
 }
 
-# get all important files from MLB.com, Mar 20 through Nov 30, 2007
-$y = 2010;
+$y = $ARGV[0];
+die "please specify a year\n" if ($y == "");
+
+# get all important files Mar 1 through Nov 10
 $start = timelocal(0,0,0,20,2,$y-1900);
 ($mon, $mday, $year) = extractDate($start);
 print "starting at $mon/$mday/$year\n";
