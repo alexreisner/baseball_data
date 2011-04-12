@@ -12,7 +12,7 @@
 #
 use LWP;
 my $browser = LWP::UserAgent->new;
-$baseurl = "http://gd2.mlb.com/components/game/mlb";
+$baseurl = "http://gdx.mlb.com/components/game/mlb";
 $outputdir = "./games";
 
 use Time::Local;
