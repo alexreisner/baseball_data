@@ -4,6 +4,7 @@
 # book in the following ways:
 #
 # * it requires a year to be passed on the command line
+# * it doesn't try to download files for future games
 # * it will not die on a transfer error, so be sure to save output
 #   to a log file and read carefully to get any missed files
 # * it does *not* download players.txt or batter/pitcher files
@@ -48,13 +49,14 @@ $start = timelocal(0,0,0,20,2,$y-1900);
 print "starting at $mon/$mday/$year\n";
 
 #($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
-$now = timelocal(0,0,0,30,10,$y-1900);
-($mon, $mday, $year) = extractDate($now);
+$end = timelocal(0,0,0,30,10,$y-1900);
+$end = time < $end ? time : $end; # don't go beyond today
+($mon, $mday, $year) = extractDate($end);
 print "ending at $mon/$mday/$year\n";
 
 verifyDir($outputdir);
 
-for ($t = $start; $t < $now; $t += 60*60*24) {
+for ($t = $start; $t < $end; $t += 60*60*24) {
   ($mon, $mday, $year) = extractDate($t);
   print "processing $mon/$mday/$year\n";
 
