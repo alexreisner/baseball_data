@@ -1,4 +1,4 @@
-#! /usr/bin/perl
+#!/usr/bin/env perl
 #
 # This script has been modified from the one included with the Baseball Hacks
 # book in the following ways:
