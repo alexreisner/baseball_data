@@ -29,8 +29,8 @@ sub extractDate($) {
 }
 
 sub currentYear() {
-  my ($s,$mn,$h,$d,$m,$y,$wd,$yd,$dst) = localtime(time);
-  return $y + 1900;
+  my ($d, $m, $y) = extractDate(time);
+  return $y;
 }
 
 sub verifyDir($) {
