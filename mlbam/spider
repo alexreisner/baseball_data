@@ -16,7 +16,7 @@ getopts('wthy:l:');
 
 # help
 if ($opt_h) {
-  print "Usage: spider [-y <year>] [-l <league>] [-w] [-t] [-h]\n";
+  print "Usage: spider [-y <year>] [-l <league>] [-w] [-t] [-h] [output_dir]\n";
   exit;
 }
 
@@ -35,7 +35,8 @@ $lg = "mlb" if ($lg eq "");
 use LWP;
 my $browser = LWP::UserAgent->new;
 $baseurl = "http://gdx.mlb.com/components/game/" . $lg;
-$outputdir = "./games";
+$outputdir = (-e $ARGV[-1]) ? $ARGV[-1] : "./games";
+
 
 use Time::Local;
 
