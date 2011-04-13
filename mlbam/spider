@@ -12,11 +12,11 @@
 #
 
 use Getopt::Std;
-getopts('hy:l:');
+getopts('thy:l:');
 
 # help
 if ($opt_h) {
-  print "Usage: spider [-y <year>] [-l <league>]\n";
+  print "Usage: spider [-y <year>] [-l <league>] [-t] [-h]\n";
   exit;
 }
 
@@ -69,7 +69,10 @@ print "starting at $mon/$mday/$year\n";
 
 #($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
 $end = timelocal(0,0,0,30,10,$y-1900);
-$end = time < $end ? time : $end; # don't go beyond today
+if (time < $end) {
+  # don't go beyond yesterday (include today if -t specified)
+  $end = time - ($opt_t ? 0 : 60*60*24);
+}
 ($mon, $mday, $year) = extractDate($end);
 print "ending at $mon/$mday/$year\n";
 
