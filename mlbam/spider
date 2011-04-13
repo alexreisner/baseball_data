@@ -20,12 +20,14 @@ if ($opts{'h'}) {
   exit;
 }
 
+sub currentYear() {
+  my ($s,$mn,$h,$d,$m,$y,$wd,$yd,$dst) = localtime(time);
+  return $y + 1900;
+}
+
 # year
 $y = $opts{'y'};
-if ($y eq "") {
-  ($s,$mn,$h,$d,$m,$y,$wd,$yd,$dst) = localtime(time);
-  $y = $y + 1900; # default to current year
-}
+$y = currentYear() if ($y eq "");
 
 # league (mlb, aaa, etc)
 $lg = $opts{'l'};
