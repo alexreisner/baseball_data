@@ -14,32 +14,6 @@
 use Getopt::Std;
 getopts('wthy:l:', \%opts);
 
-# help
-if ($opts{'h'}) {
-  print "Usage: spider [-y <year>] [-l <league>] [-w] [-t] [-h] [output_dir]\n";
-  exit;
-}
-
-sub currentYear() {
-  my ($s,$mn,$h,$d,$m,$y,$wd,$yd,$dst) = localtime(time);
-  return $y + 1900;
-}
-
-# year
-$y = $opts{'y'};
-$y = currentYear() if ($y eq "");
-
-# league (mlb, aaa, etc)
-$lg = $opts{'l'};
-$lg = "mlb" if ($lg eq "");
-
-
-use LWP;
-my $browser = LWP::UserAgent->new;
-$baseurl = "http://gdx.mlb.com/components/game/" . $lg;
-$outputdir = (-e $ARGV[-1]) ? $ARGV[-1] : "./games";
-
-
 use Time::Local;
 
 sub extractDate($) {
@@ -54,6 +28,11 @@ sub extractDate($) {
   return ($mon, $mday, $year);
 }
 
+sub currentYear() {
+  my ($s,$mn,$h,$d,$m,$y,$wd,$yd,$dst) = localtime(time);
+  return $y + 1900;
+}
+
 sub verifyDir($) {
   # verifies that a directory exists,
   # creates the directory if the directory doesn't
@@ -65,12 +44,26 @@ sub verifyDir($) {
   }
 }
 
-# get all important files Mar 1 through Nov 10
+# help
+if ($opts{'h'}) {
+  print "Usage: spider [-y <year>] [-l <league>] [-w] [-t] [-h] [output_dir]\n";
+  exit;
+}
+
+# year
+$y = $opts{'y'};
+$y = currentYear() if ($y eq "");
+
+# league (mlb, aaa, etc)
+$lg = $opts{'l'};
+$lg = "mlb" if ($lg eq "");
+
+# start on Mar 20
 $start = timelocal(0,0,0,20,2,$y-1900);
 ($mon, $mday, $year) = extractDate($start);
 print "starting at $mon/$mday/$year\n";
 
-#($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+# end on Nov 30
 $end = timelocal(0,0,0,30,10,$y-1900);
 if (time < $end) {
   # don't go beyond yesterday (include today if -t specified)
@@ -78,6 +71,13 @@ if (time < $end) {
 }
 ($mon, $mday, $year) = extractDate($end);
 print "ending at $mon/$mday/$year\n";
+
+
+# start fetching
+use LWP;
+my $browser = LWP::UserAgent->new;
+$baseurl = "http://gdx.mlb.com/components/game/" . $lg;
+$outputdir = (-e $ARGV[-1]) ? $ARGV[-1] : "./games";
 
 verifyDir($outputdir);
 
