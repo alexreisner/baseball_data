@@ -3,12 +3,12 @@
 # This script has been modified from the one included with the Baseball Hacks
 # book in the following ways:
 #
-# * it requires a year to be passed on the command line
+# * it takes command line options for year, league, and various settings
 # * it doesn't try to download files for future games
-# * it will not die on a transfer error, so be sure to save output
-#   to a log file and read carefully to get any missed files
 # * it does *not* download players.txt or batter/pitcher files
 # * it *does* download: game.xml, gameday_Syn.xml, linescore.xml
+# * it will not die on a transfer error, so be sure to save output
+#   to a log file and read carefully to get any missed files
 #
 
 use Getopt::Std;
