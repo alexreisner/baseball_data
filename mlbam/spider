@@ -12,11 +12,11 @@
 #
 
 use Getopt::Std;
-getopts('thy:l:');
+getopts('wthy:l:');
 
 # help
 if ($opt_h) {
-  print "Usage: spider [-y <year>] [-l <league>] [-t] [-h]\n";
+  print "Usage: spider [-y <year>] [-l <league>] [-w] [-t] [-h]\n";
   exit;
 }
 
@@ -100,7 +100,7 @@ for ($t = $start; $t < $end; $t += 60*60*24) {
 
   foreach $game (@games) {
     $gamedir = "$outputdir/year_$year/month_$mon/day_$mday/$game";
-    if (-e $gamedir) {
+    if (-e $gamedir && !$opt_w) {
       # already fetched info on this game
       print "\t\tskipping game: $game\n";
     } else {
