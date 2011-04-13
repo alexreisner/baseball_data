@@ -82,9 +82,9 @@ for ($t = $start; $t < $end; $t += 60*60*24) {
   ($mon, $mday, $year) = extractDate($t);
   print "processing $mon/$mday/$year\n";
 
-  verifyDir("$outputdir/year_$year");
-  verifyDir("$outputdir/year_$year/month_$mon");
-  verifyDir("$outputdir/year_$year/month_$mon/day_$mday");
+  verifyDir("$outputdir");
+  verifyDir("$outputdir/month_$mon");
+  verifyDir("$outputdir/month_$mon/day_$mday");
 
   $dayurl = "$baseurl/year_$year/month_$mon/day_$mday/";
   print "\t$dayurl\n";
@@ -99,7 +99,7 @@ for ($t = $start; $t < $end; $t += 60*60*24) {
   }
 
   foreach $game (@games) {
-    $gamedir = "$outputdir/year_$year/month_$mon/day_$mday/$game";
+    $gamedir = "$outputdir/month_$mon/day_$mday/$game";
     if (-e $gamedir && !$opt_w) {
       # already fetched info on this game
       print "\t\tskipping game: $game\n";
