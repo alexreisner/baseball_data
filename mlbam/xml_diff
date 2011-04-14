@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+#
+# Get a diff between two revisions of a MLBAM XML file. Takes the hash of the
+# commit of interest and the filename.
+#
+
+commit="$1"
+filepath="$2"
+tmpdir="tmp$RANDOM"
+
+mkdir "$tmpdir"
+
+git co $commit^ "$filepath"
+xmllint --format "$filepath" > "$tmpdir/old.xml"
+
+git co $commit "$filepath"
+xmllint --format "$filepath" > "$tmpdir/new.xml"
+
+git co "$filepath"
+diff -u "$tmpdir/old.xml" "$tmpdir/new.xml"
+
+rm "$tmpdir"/*
+rmdir "$tmpdir"
