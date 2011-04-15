@@ -35,7 +35,7 @@ xmllint --format "$filepath" > "$tmpdir/old.xml"
 git co $commit "$filepath"
 xmllint --format "$filepath" > "$tmpdir/new.xml"
 
-git co "$filepath"
+git co HEAD "$filepath"
 
 if [ "$iflag" ]; then
   sort "$tmpdir/old.xml" > "$tmpdir/old.xml"
