@@ -8,6 +8,11 @@ commit="$1"
 filepath="$2"
 tmpdir="tmp$RANDOM"
 
+if [ ! -e "$filepath" ]; then
+  echo "File not found."
+  exit 1
+fi
+
 mkdir "$tmpdir"
 
 git co $commit^ "$filepath"
