@@ -38,8 +38,8 @@ xmllint --format "$filepath" > "$tmpdir/new.xml"
 git co HEAD "$filepath"
 
 if [ "$iflag" ]; then
-  sort "$tmpdir/old.xml" > "$tmpdir/old.xml"
-  sort "$tmpdir/new.xml" > "$tmpdir/new.xml"
+  sort "$tmpdir/old.xml" -o "$tmpdir/old.xml"
+  sort "$tmpdir/new.xml" -o "$tmpdir/new.xml"
 fi
 
 diff -u "$tmpdir/old.xml" "$tmpdir/new.xml"
