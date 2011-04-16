@@ -3,6 +3,15 @@
 # Get a diff between two revisions of a MLBAM XML file.
 #
 
+usage(){
+  echo "Usage:"
+  printf "  %s [-i] [-c <commit>] <filename>\n" $(basename $0) >&2
+  echo ""
+  echo "Options:"
+  echo "  -i           ignore line order"
+  echo "  -c <commit>  look at changes in the given commit (default: HEAD)"
+}
+
 iflag=
 commit=HEAD
 
@@ -13,7 +22,7 @@ do
     ;;
   i) iflag=1
     ;;
-  ?) printf "Usage: %s [-i] [-c <commit>] <filename>\n" $(basename $0) >&2
+  ?) usage
     exit 2
     ;;
   esac
