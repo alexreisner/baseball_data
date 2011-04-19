@@ -81,6 +81,23 @@ $outputdir = (-e $ARGV[-1]) ? $ARGV[-1] : "./games";
 
 verifyDir($outputdir);
 
+sub fetchFile {
+  my ($filename) = @_;
+  if($gamehtml =~ m/<a href=\"$filename\"/ ) {
+    my $url = "$dayurl/$game/$filename";
+    my $response = $browser->get($url);
+    print "Couldn't get $url: ", $response->status_line, "\n"
+      unless $response->is_success;
+    my $content = $response->content;
+    open FILE, ">$gamedir/$filename"
+      or die "could not open file $gamedir/$filename: $|\n";
+    print FILE $content;
+    close FILE;
+  } else {
+    print "warning: no $filename for $game\n";
+  }
+}
+
 for ($t = $start; $t < $end; $t += 60*60*24) {
   ($mon, $mday, $year) = extractDate($t);
   print "processing $mon/$mday/$year\n";
@@ -115,86 +132,11 @@ for ($t = $start; $t < $end; $t += 60*60*24) {
         unless $response->is_success;
       $gamehtml = $response->content;
 
-
-      # boxscore.xml
-      if($gamehtml =~ m/<a href=\"boxscore\.xml\"/ ) {
-        $boxurl = "$dayurl/$game/boxscore.xml";
-        $response = $browser->get($boxurl);
-        print "Couldn't get $boxurl: ", $response->status_line, "\n"
-          unless $response->is_success;
-        $boxhtml = $response->content;
-        open BOX, ">$gamedir/boxscore.xml"
-          or die "could not open file $gamedir/boxscore.xml: $|\n";
-        print BOX $boxhtml;
-        close BOX;
-      } else {
-        print "warning: no xml box score for $game\n";
-      }
-
-
-      # players.xml
-      if($gamehtml =~ m/<a href=\"players\.xml\"/ ) {
-        $fileurl = "$dayurl/$game/players.xml";
-        $response = $browser->get($fileurl);
-        print "Couldn't get $fileurl: ", $response->status_line, "\n"
-          unless $response->is_success;
-        $html = $response->content;
-        open FILE, ">$gamedir/players.xml"
-          or die "could not open file $gamedir/players.xml: $|\n";
-        print FILE $html;
-        close FILE;
-      } else {
-        print "warning: no players file for $game\n";
-      }
-
-
-      # game.xml
-      if($gamehtml =~ m/<a href=\"game\.xml\"/ ) {
-        $fileurl = "$dayurl/$game/game.xml";
-        $response = $browser->get($fileurl);
-        print "Couldn't get $fileurl: ", $response->status_line, "\n"
-          unless $response->is_success;
-        $html = $response->content;
-        open FILE, ">$gamedir/game.xml"
-          or die "could not open file $gamedir/game.xml: $|\n";
-        print FILE $html;
-        close FILE;
-      } else {
-        print "warning: no game file for $game\n";
-      }
-
-
-      # gameday_Syn.xml
-      if($gamehtml =~ m/<a href=\"gameday_Syn\.xml\"/ ) {
-        $fileurl = "$dayurl/$game/gameday_Syn.xml";
-        $response = $browser->get($fileurl);
-        print "Couldn't get $fileurl: ", $response->status_line, "\n"
-          unless $response->is_success;
-        $html = $response->content;
-        open FILE, ">$gamedir/gameday_Syn.xml"
-          or die "could not open file $gamedir/gameday_Syn.xml: $|\n";
-        print FILE $html;
-        close FILE;
-      } else {
-        print "warning: no gameday_Syn file for $game\n";
-      }
-
-
-      # linescore.xml
-      if($gamehtml =~ m/<a href=\"linescore\.xml\"/ ) {
-        $fileurl = "$dayurl/$game/linescore.xml";
-        $response = $browser->get($fileurl);
-        print "Couldn't get $fileurl: ", $response->status_line, "\n"
-          unless $response->is_success;
-        $html = $response->content;
-        open FILE, ">$gamedir/linescore.xml"
-          or die "could not open file $gamedir/linescore.xml: $|\n";
-        print FILE $html;
-        close FILE;
-      } else {
-        print "warning: no linescore file for $game\n";
-      }
-
+      fetchFile("boxscore.xml");
+      fetchFile("players.xml");
+      fetchFile("game.xml");
+      fetchFile("gameday_Syn.xml");
+      fetchFile("linescore.xml");
 
       #if($gamehtml =~ m/<a href=\"inning\/\"/ ) {
       #  $inningdir = "$gamedir/inning";
