@@ -16,7 +16,7 @@ getopts('wthy:l:', \%opts);
 
 use Time::Local;
 
-sub extractDate($) {
+sub extractDate {
   # extracts and formats date from a time stamp
   ($t) = @_;
   my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst)
@@ -28,12 +28,12 @@ sub extractDate($) {
   return ($mon, $mday, $year);
 }
 
-sub currentYear() {
+sub currentYear {
   my ($d, $m, $y) = extractDate(time);
   return $y;
 }
 
-sub verifyDir($) {
+sub verifyDir {
   # verifies that a directory exists,
   # creates the directory if the directory doesn't
   my ($d) = @_;
