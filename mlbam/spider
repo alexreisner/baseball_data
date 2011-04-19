@@ -82,14 +82,14 @@ $outputdir = (-e $ARGV[-1]) ? $ARGV[-1] : "./games";
 verifyDir($outputdir);
 
 sub fetchFile {
-  my ($filename) = @_;
+  my ($filename, $urlpath, $filepath) = @_;
   if($gamehtml =~ m/<a href=\"$filename\"/ ) {
-    my $url = "$dayurl/$game/$filename";
+    my $url = "$urlpath/$filename";
     my $response = $browser->get($url);
     print "Couldn't get $url: ", $response->status_line, "\n"
       unless $response->is_success;
     my $content = $response->content;
-    open FILE, ">$gamedir/$filename"
+    open FILE, ">$filepath/$filename"
       or die "could not open file $gamedir/$filename: $|\n";
     print FILE $content;
     close FILE;
@@ -132,11 +132,12 @@ for ($t = $start; $t < $end; $t += 60*60*24) {
         unless $response->is_success;
       $gamehtml = $response->content;
 
-      fetchFile("boxscore.xml");
-      fetchFile("players.xml");
-      fetchFile("game.xml");
-      fetchFile("gameday_Syn.xml");
-      fetchFile("linescore.xml");
+      fetchFile("boxscore.xml"    , $gameurl , $gamedir);
+      fetchFile("players.xml"     , $gameurl , $gamedir);
+      fetchFile("game.xml"        , $gameurl , $gamedir);
+      fetchFile("gameday_Syn.xml" , $gameurl , $gamedir);
+      fetchFile("linescore.xml"   , $gameurl , $gamedir);
+
 
       #if($gamehtml =~ m/<a href=\"inning\/\"/ ) {
       #  $inningdir = "$gamedir/inning";
