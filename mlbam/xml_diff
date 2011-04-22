@@ -15,16 +15,11 @@ usage(){
 iflag=
 commit=HEAD
 
-while getopts 'ic:' OPTION
-do
+while getopts 'ic:' OPTION; do
   case $OPTION in
-  c) commit=$OPTARG
-    ;;
-  i) iflag=1
-    ;;
-  ?) usage
-    exit 2
-    ;;
+    c) commit=$OPTARG ;;
+    i) iflag=1 ;;
+    ?) usage; exit 2 ;;
   esac
 done
 shift $(($OPTIND - 1))
