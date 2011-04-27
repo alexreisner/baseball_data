@@ -8,9 +8,9 @@
 # will be printed to STDERR and the downloaded file is stored in the same
 # directory with a .orig extension.
 #
-# This script strives for POSIX-compliance but resorts to a non-standard
-# date command that supports the -d option for specifying a custom date.
-# It works on Ubuntu and does not work on OSX.
+# This script strives for POSIX-compliance where possible but, among other
+# things, requires a non-standard date command that supports the -d option
+# for specifying a custom date. It works on Ubuntu and does not work on OSX.
 #
 
 usage() {
