@@ -60,7 +60,18 @@ datafiles() {
 # download a file (takes URL and filesystem path)
 fetchfile() {
   [ $verbose ] && echo "  $file"
-  curl -s "$1" > "$2.orig"
+  curl -sf "$1" -o "$2.orig"
+  curlexit="$?"
+  if [ $curlexit -eq 22 ]; then
+    # warning when file doesn't appear to exist
+    echo "Warning: couldn't download $1 (server responded with HTTP >=400)"
+    return
+  elif [ $curlexit -gt 0 ]; then
+    # error when problem connecting to server
+    echo "Error: couldn't download $1 (curl exited with code $curlexit)" >&2
+    return 1
+  fi
+
   xmllint --format "$2.orig" > "$2"
   # Some files have an XML declaration, xmllint adds one if it's missing.
   # We remove the XML declarations and all whitespace before comparing files.
