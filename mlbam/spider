@@ -72,7 +72,7 @@ fetchfile() {
     return 1
   fi
 
-  xmllint --format "$2.orig" > "$2"
+  XMLLINT_INDENT="  " xmllint --format "$2.orig" > "$2"
   # Some files have an XML declaration, xmllint adds one if it's missing.
   # We remove the XML declarations and all whitespace before comparing files.
   diff <(sed '1{s/<?xml.*?>//}' "$2" | tr -d " \t\n") \
