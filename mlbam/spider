@@ -77,7 +77,7 @@ fetchfile() {
   # We remove the XML declarations and all whitespace before comparing files.
   diff <(sed '1{s/<?xml.*?>//}' "$2" | tr -d " \t\n") \
     <(sed '1{s/<?xml.*?>//}' "$2.orig" | tr -d " \t\n") > /dev/null
-  if [ $? ]; then
+  if [ $? -eq 0 ]; then
     rm "$2.orig"
   else
     echo "Error: unexpected xmllint output for $2" >&2
