@@ -2,8 +2,15 @@
 #
 # Download baseball data (XML) files from MLBAM.
 #
-# Requires a shell with a `date` command that accepts the -d option
-# for specifying a custom date (works on Ubuntu, does not work on OSX).
+# All files are run through `xmllint --format`. Content is verified after
+# formatting to ensure xmllint isn't doing anything funny. If there is a
+# difference between the file contents pre-and post-processing, a message
+# will be printed to STDERR and the downloaded file is stored in the same
+# directory with a .orig extension.
+#
+# This script strives for POSIX-compliance but resorts to a non-standard
+# date command that supports the -d option for specifying a custom date.
+# It works on Ubuntu and does not work on OSX.
 #
 
 usage() {
@@ -50,6 +57,22 @@ datafiles() {
   echo "linescore.xml"
 }
 
+# download a file (takes URL and filesystem path)
+fetchfile() {
+  [ $verbose ] && echo "  $file"
+  curl -s "$1" > "$2.orig"
+  xmllint --format "$2.orig" > "$2"
+  # Some files have an XML declaration, xmllint adds one if it's missing.
+  # We remove the XML declarations and all whitespace before comparing files.
+  diff <(cat "$2" | sed '1{s/<?xml.*?>//}' | tr -d " \t\n") \
+    <(cat "$2.orig" | sed '1{s/<?xml.*?>//}' | tr -d " \t\n")
+  if [ $? ]; then
+    rm "$2.orig"
+  else
+    echo "Error: unexpected xmllint output for $2" >&2
+  fi
+}
+
 year=$(date +%Y)
 league=mlb
 overwrite=
@@ -94,8 +117,7 @@ while true; do
     mkdir -p "$gamedir"
     for file in $(datafiles); do
       if [ ! -f "$gamedir/$file" ] || [ $overwrite ]; then
-        [ $verbose ] && echo "  $file"
-        curl -s "$gameurl/$file" > "$gamedir/$file"
+        fetchfile "$gameurl/$file" "$gamedir/$file"
       fi
     done
     sleep 1 # be a little polite
