@@ -71,6 +71,9 @@ fetchfile() {
   else
     echo "Error: unexpected xmllint output for $2" >&2
   fi
+
+  ((downloads += 1))
+  [ $(($downloads % 10)) -eq 0 ] && sleep 1
 }
 
 year=$(date +%Y)
@@ -78,6 +81,9 @@ league=mlb
 overwrite=
 today=
 verbose=
+
+# keep track of downloads so we can sleep occasionally
+downloads=0
 
 while getopts "y:l:vwth" opt; do
   case $opt in
@@ -120,7 +126,6 @@ while true; do
         fetchfile "$gameurl/$file" "$gamedir/$file"
       fi
     done
-    sleep 1 # be a little polite
   done
   if [ "$(formatdate $d %F)" == "$(formatdate $lastdate %F)" ]; then
     break
