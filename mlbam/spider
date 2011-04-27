@@ -65,7 +65,7 @@ fetchfile() {
   # Some files have an XML declaration, xmllint adds one if it's missing.
   # We remove the XML declarations and all whitespace before comparing files.
   diff <(sed '1{s/<?xml.*?>//}' "$2" | tr -d " \t\n") \
-    <(sed '1{s/<?xml.*?>//}' "$2.orig" | tr -d " \t\n")
+    <(sed '1{s/<?xml.*?>//}' "$2.orig" | tr -d " \t\n") > /dev/null
   if [ $? ]; then
     rm "$2.orig"
   else
