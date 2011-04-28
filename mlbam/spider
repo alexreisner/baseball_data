@@ -132,6 +132,9 @@ fi
 echo "Downloading data for $league ($(formatdate "$firstdate" "%b %d") - \
 $(formatdate "$lastdate" "%b %d"), $year) to $outputdir"
 
+starttime=$(date +%s)
+echo "Starting at $(date)"
+
 d="$firstdate"
 
 while true; do
@@ -152,3 +155,6 @@ while true; do
     ((d += 60*60*24))
   fi
 done
+
+elapsed=$(($(date +%s) - $starttime))
+echo "Finished in $(formatdate "$elapsed" "%H hrs %M mins %S secs")."
