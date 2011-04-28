@@ -89,6 +89,7 @@ fetchfile() {
 
 year=$(date +%Y)
 league=mlb
+previous=
 overwrite=
 today=
 verbose=
@@ -96,10 +97,11 @@ verbose=
 # keep track of downloads so we can sleep occasionally
 downloads=0
 
-while getopts "y:l:vwth" opt; do
+while getopts "y:l:p:vwth" opt; do
   case $opt in
     y) year="$OPTARG" ;;
     l) league="$OPTARG" ;;
+    p) previous="$OPTARG" ;;
     t) today=true ;;
     v) verbose=true ;;
     w) overwrite=true ;;
@@ -112,13 +114,19 @@ shift $(( OPTIND - 1 ))
 baseurl="http://gdx.mlb.com/components/game/$league"
 [ -z $1 ] && outputdir="./mlbam" || outputdir="$1"
 
-# set first and last dates to fetch (seconds since 1970-01-01)
-firstdate=$(date -d "$year-02-01" +%s)
+# set ending date (seconds since 1970-01-01)
 if [ "$year" -eq $(date +%Y) ]; then
   lastdate=$(date +%s)
   [ $today ] || ((lastdate -= 60*60*24))
 else
   lastdate=$(date -d "$year-11-10" +%s)
+fi
+
+# set starting date
+if [ -n "$previous" ]; then
+  firstdate=$(($lastdate - 60*60*24*($previous - 1)))
+else
+  firstdate=$(date -d "$year-02-01" +%s)
 fi
 
 echo "Downloading data for $league ($(formatdate "$firstdate" "%b %d") - \
