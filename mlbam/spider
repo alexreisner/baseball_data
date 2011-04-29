@@ -43,8 +43,13 @@ dateurl() {
 
 # ids of games played on the given date
 gameids() {
-  curl -s "$(dateurl $1)/" |
-  sed -n 's:.*href="\(gid_[^/"]*\)/".*:\1:p'
+  html=$(curl -sf "$(dateurl $1)/")
+  curlexit="$?"
+  if [ $curlexit -gt 0 ]; then
+    echo "Error: couldn't download $1 (curl exited with code $curlexit)" >&2
+    return 1
+  fi
+  sed -n 's:.*href="\(gid_[^/"]*\)/".*:\1:p' <<<"$html"
 }
 
 # files to download for each game
