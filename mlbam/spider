@@ -15,7 +15,7 @@
 
 usage() {
   echo "Usage:"
-  printf "  %s [options] [output_dir]\n" $(basename $0) >&2
+  printf "  %s [options] [output_dir]\n" $(basename $0)
   echo ""
   echo "Options:"
   echo "  -y <year>    Year for which to download files (default: $(date +%Y))."
