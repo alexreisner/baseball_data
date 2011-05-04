@@ -8,9 +8,20 @@
 # will be printed to STDERR and the downloaded file is stored in the same
 # directory with a .orig extension.
 #
+# Progress reports and non-critical warnings are sent to standard output
+# and errors that need user attention are sent to standard error, so you
+# can run the script and keep two separate log files, for example:
+#
+#   spider [options] >spider.log 2>spider.error.log
+#
+# or, if you want to view progress and just log errors:
+#
+#   spider [options] 2>spider.error.log
+#
 # This script strives for POSIX-compliance where possible but, among other
-# things, requires a non-standard date command that supports the -d option
-# for specifying a custom date. It works on Ubuntu and does not work on OSX.
+# things, requires the GNU date command which supports the -d option for
+# specifying a custom date. It works on Ubuntu and does not work on OSX,
+# which comes with the BSD date command.
 #
 
 usage() {
