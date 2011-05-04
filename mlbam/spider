@@ -37,6 +37,16 @@ usage() {
   echo "  -h           Print this help."
 }
 
+# print a message
+msg() {
+  case $1 in
+    error)    [ $verbose -ge 1 ] && echo "Error: $2" >&2 ;;
+    warning)  [ $verbose -ge 2 ] && echo "Warning: $2" ;;
+    notice)   [ $verbose -ge 1 ] && echo "$2" ;;
+    progress) [ $verbose -ge 2 ] && echo "$2" ;;
+  esac
+}
+
 # takes a timestamp and format string
 formatdate() {
   date -d "1970-01-01 $1 sec" +"$2"
@@ -57,9 +67,7 @@ gameids() {
   html=$(curl -sf "$(dateurl $1)/")
   curlexit="$?"
   if [ $curlexit -gt 0 ]; then
-    if [ $verbose -ge 1 ]; then
-      echo "Error: couldn't download $1 (curl exited with code $curlexit)" >&2
-    fi
+    msg error "couldn't download $1 (curl exited with code $curlexit)"
     return 1
   fi
   sed -n 's:.*href="\(gid_[^/"]*\)/".*:\1:p' <<<"$html"
@@ -76,20 +84,14 @@ datafiles() {
 
 # download a file (takes URL and filesystem path)
 fetchfile() {
-  if [ $verbose -ge 2 ]; then
-    echo "  $file"
-  fi
+  msg progress "  $file"
   curl -sf "$1" -o "$2.orig"
   curlexit="$?"
   if [ $curlexit -eq 22 ]; then
-    if [ $verbose -ge 2 ]; then
-      echo "Warning: couldn't download $1 (server responded with HTTP >=400)"
-    fi
+    msg warning "couldn't download $1 (server responded with HTTP >=400)"
     return
   elif [ $curlexit -gt 0 ]; then
-    if [ $verbose -ge 1 ]; then
-      echo "Error: couldn't download $1 (curl exited with code $curlexit)" >&2
-    fi
+    msg error "couldn't download $1 (curl exited with code $curlexit)"
     return 1
   fi
 
@@ -101,9 +103,7 @@ fetchfile() {
   if [ $? -eq 0 ]; then
     rm "$2.orig"
   else
-    if [ $verbose -ge 1 ]; then
-      echo "Error: unexpected xmllint output for $2" >&2
-    fi
+    msg error "unexpected xmllint output for $2"
   fi
 
   ((downloads += 1))
@@ -152,17 +152,15 @@ else
   firstdate=$(date -d "$year-02-01" +%s)
 fi
 
-if [ $verbose -ge 1 ]; then
-  echo "Downloading data for $league ($(formatdate "$firstdate" "%b %d") - \
+msg notice "Downloading data for $league ($(formatdate "$firstdate" "%b %d") - \
 $(formatdate "$lastdate" "%b %d"), $year) to $outputdir"
-fi
 
 starttime=$(date +%s)
 d="$firstdate"
 
 while true; do
   for gid in $(gameids $d); do
-    [ $verbose -ge 1 ] && echo "Processing game $gid"
+    msg progress "Processing game $gid"
     gameurl="$(dateurl $d)/$gid"
     gamedir="$outputdir/$(datepath $d)/$gid"
     mkdir -p "$gamedir"
@@ -180,6 +178,4 @@ while true; do
 done
 
 elapsed=$(($(date +%s) - $starttime))
-if [ $verbose -ge 1 ]; then
-  echo "Finished in $(formatdate "$elapsed" "%H hrs %M mins %S secs")."
-fi
+msg notice "Finished in $(formatdate "$elapsed" "%H hrs %M mins %S secs")."
