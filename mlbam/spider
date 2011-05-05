@@ -174,7 +174,7 @@ while true; do
       fi
     done
   done
-  if [ "$(formatdate $d %F)" == "$(formatdate $lastdate %F)" ]; then
+  if [ $(formatdate "$d" %F) == $(formatdate "$lastdate" %F) ]; then
     break
   else
     ((d += 60*60*24))
