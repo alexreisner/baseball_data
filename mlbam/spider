@@ -66,7 +66,7 @@ dateurl() {
 gameids() {
   html=$(curl -sf "$(dateurl $1)/")
   curlexit="$?"
-  if [ $curlexit -gt 0 ]; then
+  if (( curlexit > 0 )); then
     msg error "couldn't download $1 (curl exited with code $curlexit)"
     return 1
   fi
@@ -87,10 +87,10 @@ fetchfile() {
   msg progress "  $file"
   curl -sf "$1" -o "$2.orig"
   curlexit="$?"
-  if [ $curlexit -eq 22 ]; then
+  if (( curlexit == 22 )); then
     msg warning "couldn't download $1 (server responded with HTTP >=400)"
     return
-  elif [ $curlexit -gt 0 ]; then
+  elif (( curlexit > 0 )); then
     msg error "couldn't download $1 (curl exited with code $curlexit)"
     return 1
   fi
@@ -106,8 +106,8 @@ fetchfile() {
     msg error "unexpected xmllint output for $2"
   fi
 
-  ((downloads += 1))
-  [ $(($downloads % 10)) -eq 0 ] && sleep 1
+  (( ++downloads ))
+  (( downloads % 10 == 0 )) && sleep 1
 }
 
 year=$(date +%Y)
@@ -138,9 +138,9 @@ baseurl="http://gdx.mlb.com/components/game/$league"
 [ -z $1 ] && outputdir="./mlbam" || outputdir="$1"
 
 # set ending date (seconds since 1970-01-01)
-if [ "$year" -eq $(date +%Y) ]; then
+if (( year == $(date +%Y) )); then
   lastdate=$(date +%s)
-  [ $today ] || ((lastdate -= 60*60*24))
+  [ $today ] || (( lastdate -= 60*60*24 ))
 else
   lastdate=$(date -d "$year-11-10" +%s)
 fi
