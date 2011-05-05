@@ -32,7 +32,8 @@ usage() {
   echo "  -y <year>    Year for which to download files (default: $(date +%Y))."
   echo "  -l <league>  League: mlb, milb, etc (default: mlb)."
   echo "  -t           Include today's files (othewise stops at yesterday)."
-  echo "  -v <level>   Verbosity: 0 = errors only, 1 = progress (default), 2 = detailed progress."
+  echo "  -q           Be quiet: output errors only (on STDERR)."
+  echo "  -v           Be verbose: output detailed progress messages."
   echo "  -w           Overwrite existing files."
   echo "  -h           Print this help."
 }
@@ -41,10 +42,10 @@ usage() {
 msg() {
   case $1 in
     error)    echo "Error: $2" >&2 ;;
-    notice)   [ $verbose -ge 1 ] && echo "$2" ;;
-    progress) [ $verbose -ge 1 ] && echo "$2" ;;
-    warning)  [ $verbose -ge 2 ] && echo "Warning: $2" ;;
-    detail)   [ $verbose -ge 2 ] && echo "$2" ;;
+    notice)   $quiet   || echo "$2" ;;
+    progress) $quiet   || echo "$2" ;;
+    warning)  $verbose && echo "Warning: $2" ;;
+    detail)   $verbose && echo "$2" ;;
   esac
 }
 
@@ -116,18 +117,20 @@ league=mlb
 previous=
 overwrite=
 today=
-verbose=1
+quiet=false
+verbose=false
 
 # keep track of downloads so we can sleep occasionally
 downloads=0
 
-while getopts "y:l:p:v:wth" opt; do
+while getopts "y:l:p:vqwth" opt; do
   case $opt in
     y) year="$OPTARG" ;;
     l) league="$OPTARG" ;;
     p) previous="$OPTARG" ;;
     t) today=true ;;
-    v) verbose="$OPTARG" ;;
+    q) quiet=true ;;
+    v) verbose=true ;;
     w) overwrite=true ;;
     h) usage; exit 0 ;;
     *) usage; exit 1 ;;
