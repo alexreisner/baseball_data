@@ -32,7 +32,7 @@ usage() {
   echo "  -y <year>    Year for which to download files (default: $(date +%Y))."
   echo "  -l <league>  League: mlb, milb, etc (default: mlb)."
   echo "  -t           Include today's files (othewise stops at yesterday)."
-  echo "  -v <level>   Verbosity: 0 = silent, 1 = errors, 2 = files/warnings."
+  echo "  -v <level>   Verbosity: 0 = errors only, 1 = progress (default), 2 = detailed progress."
   echo "  -w           Overwrite existing files."
   echo "  -h           Print this help."
 }
@@ -40,10 +40,11 @@ usage() {
 # print a message
 msg() {
   case $1 in
-    error)    [ $verbose -ge 1 ] && echo "Error: $2" >&2 ;;
-    warning)  [ $verbose -ge 2 ] && echo "Warning: $2" ;;
+    error)    echo "Error: $2" >&2 ;;
     notice)   [ $verbose -ge 1 ] && echo "$2" ;;
-    progress) [ $verbose -ge 2 ] && echo "$2" ;;
+    progress) [ $verbose -ge 1 ] && echo "$2" ;;
+    warning)  [ $verbose -ge 2 ] && echo "Warning: $2" ;;
+    detail)   [ $verbose -ge 2 ] && echo "$2" ;;
   esac
 }
 
@@ -84,7 +85,7 @@ datafiles() {
 
 # download a file (takes URL and filesystem path)
 fetchfile() {
-  msg progress "  $file"
+  msg detail "  $file"
   curl -sf "$1" -o "$2.orig"
   curlexit="$?"
   if (( curlexit == 22 )); then
