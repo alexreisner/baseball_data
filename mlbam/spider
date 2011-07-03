@@ -162,7 +162,7 @@ $(formatdate "$lastdate" "%b %d"), $year) to $outputdir"
 starttime=$(date +%s)
 d="$firstdate"
 
-while true; do
+while [ $(formatdate "$d" %F) != $(formatdate "$lastdate" %F) ]; do
   for gid in $(gameids $d); do
     msg progress "Processing game $gid"
     gameurl="$(dateurl $d)/$gid"
@@ -174,11 +174,7 @@ while true; do
       fi
     done
   done
-  if [ $(formatdate "$d" %F) == $(formatdate "$lastdate" %F) ]; then
-    break
-  else
-    ((d += 60*60*24))
-  fi
+  ((d += 60*60*24))
 done
 
 elapsed=$(($(date +%s) - $starttime))
