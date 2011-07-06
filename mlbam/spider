@@ -23,6 +23,12 @@
 # specifying a custom date. It works on Ubuntu and does not work on OSX,
 # which comes with the BSD date command.
 #
+# REQUIREMENTS
+#
+# You must have curl and xmllint installed. On Ubuntu:
+#
+#   sudo apt-get install libxml2-utils curl
+#
 
 usage() {
   echo "Usage:"
