@@ -35,7 +35,7 @@ usage() {
   printf "  %s [options] [output_dir]\n" $(basename $0)
   echo ""
   echo "Options:"
-  echo "  -y <year>    Year for which to download files (default: $(date +%Y))."
+  echo "  -y <year>    Year for which to download files (default: $(current_year))."
   echo "  -l <league>  League: mlb, milb, etc (default: mlb)."
   echo "  -t           Include today's files (othewise stops at yesterday)."
   echo "  -q           Be quiet: output errors only (on STDERR)."
@@ -68,6 +68,10 @@ datepath() {
 # base MLBAM URL for a given date
 dateurl() {
   echo "$baseurl/year_$year/$(datepath $1)"
+}
+
+current_year() {
+  date +%Y
 }
 
 # ids of games played on the given date
@@ -134,7 +138,7 @@ check_dependency xmllint libxml2-utils
 check_dependency curl
 
 # set some reasonable defaults
-year=$(date +%Y)
+year=$(current_year)
 league=mlb
 previous=
 overwrite=
@@ -166,7 +170,7 @@ baseurl="http://gdx.mlb.com/components/game/$league"
 outputdir="$(readlink -f "$outputdir")"
 
 # set ending date (seconds since 1970-01-01)
-if (( year == $(date +%Y) )); then
+if (( year == $(current_year) )); then
   lastdate=$(date +%s)
   [ $today ] || (( lastdate -= 60*60*24 ))
 else
