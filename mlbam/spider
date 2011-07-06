@@ -160,6 +160,9 @@ check_dependency(){
   fi
 }
 
+absolute_path() {
+  readlink -f "$1"
+}
 
 # check for required libraries before starting
 check_dependency xmllint libxml2-utils
@@ -193,9 +196,7 @@ shift $(( OPTIND - 1 ))
 # set base URL and output directory
 baseurl="http://gdx.mlb.com/components/game/$league"
 [ -z $1 ] && outputdir="./mlbam" || outputdir="$1"
-
-# expand output directory (absolute path)
-outputdir="$(readlink -f "$outputdir")"
+outputdir="$(absolute_path "$outputdir")"
 
 # set ending date (seconds since 1970-01-01)
 if (( year == $(current_year) )); then
