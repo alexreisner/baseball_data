@@ -74,6 +74,10 @@ current_year() {
   date +%Y
 }
 
+current_timestamp() {
+  date +%s
+}
+
 # ids of games played on the given date
 gameids() {
   html=$(curl -sf "$(dateurl $1)/")
@@ -171,7 +175,7 @@ outputdir="$(readlink -f "$outputdir")"
 
 # set ending date (seconds since 1970-01-01)
 if (( year == $(current_year) )); then
-  lastdate=$(date +%s)
+  lastdate=$(current_timestamp)
   [ $today ] || (( lastdate -= 60*60*24 ))
 else
   lastdate=$(date -d "$year-11-10" +%s)
@@ -191,7 +195,7 @@ downloads=0
 msg notice "Downloading data for $league ($(formatdate "$firstdate" "%b %d") - \
 $(formatdate "$lastdate" "%b %d"), $year) to $outputdir"
 
-starttime=$(date +%s)
+starttime=$(current_timestamp)
 d="$firstdate"
 
 while [ $(formatdate "$d" %F) != $(formatdate "$lastdate" %F) ]; do
@@ -210,5 +214,5 @@ while [ $(formatdate "$d" %F) != $(formatdate "$lastdate" %F) ]; do
 done
 
 # announce the results
-elapsed=$(($(date +%s) - $starttime))
+elapsed=$(($(current_timestamp) - $starttime))
 msg notice "Finished in $(formatdate "$elapsed" "%H hrs %M mins %S secs")."
