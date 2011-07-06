@@ -138,7 +138,7 @@ fetchfile() {
 check_dependency(){
   [ -n "$2" ] && package="$2" || package="$1"
   $1 --version > /dev/null 2>&1
-  if [ $? -gt 0 ]; then
+  if [ $? -eq 127 ]; then
     echo "$1 not found, please install it (on Ubuntu: sudo apt-get install $package)."
     exit 1
   fi
