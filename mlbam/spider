@@ -78,6 +78,14 @@ current_timestamp() {
   date +%s
 }
 
+default_start_date() {
+  date -d "$year-02-01" +%s
+}
+
+default_end_date() {
+  date -d "$year-11-10" +%s
+}
+
 # ids of games played on the given date
 gameids() {
   html=$(curl -sf "$(dateurl $1)/")
@@ -178,14 +186,14 @@ if (( year == $(current_year) )); then
   lastdate=$(current_timestamp)
   [ $today ] || (( lastdate -= 60*60*24 ))
 else
-  lastdate=$(date -d "$year-11-10" +%s)
+  lastdate=$(default_end_date)
 fi
 
 # set starting date
 if [ -n "$previous" ]; then
   firstdate=$(($lastdate - 60*60*24*($previous - 1)))
 else
-  firstdate=$(date -d "$year-02-01" +%s)
+  firstdate=$(default_start_date)
 fi
 
 # keep track of downloads so we can sleep occasionally
