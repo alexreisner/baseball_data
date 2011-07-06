@@ -162,6 +162,9 @@ shift $(( OPTIND - 1 ))
 baseurl="http://gdx.mlb.com/components/game/$league"
 [ -z $1 ] && outputdir="./mlbam" || outputdir="$1"
 
+# expand output directory (absolute path)
+outputdir="$(readlink -f "$outputdir")"
+
 # set ending date (seconds since 1970-01-01)
 if (( year == $(date +%Y) )); then
   lastdate=$(date +%s)
