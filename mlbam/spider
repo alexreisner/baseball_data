@@ -118,22 +118,20 @@ fetchfile() {
   (( downloads % 10 == 0 )) && sleep 1
 }
 
-check_dependencies(){
-  xmllint --version > /dev/null 2>&1
+# takes a command name (and package name, if different)
+check_dependency(){
+  [ -n "$2" ] && package="$2" || package="$1"
+  $1 --version > /dev/null 2>&1
   if [ $? -gt 0 ]; then
-    echo "xmllint not found, please install it (on Ubuntu: sudo apt-get install libxml2-utils)."
-    exit 1
-  fi
-  curl --version > /dev/null 2>&1
-  if [ $? -gt 0 ]; then
-    echo "curl not found, please install it (on Ubuntu: sudo apt-get install curl)."
+    echo "$1 not found, please install it (on Ubuntu: sudo apt-get install $package)."
     exit 1
   fi
 }
 
 
 # check for required libraries before starting
-check_dependencies
+check_dependency xmllint libxml2-utils
+check_dependency curl
 
 # set some reasonable defaults
 year=$(date +%Y)
