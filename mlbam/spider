@@ -99,6 +99,10 @@ default_end_date() {
 }
 
 date_command_version() {
+  toolset_name
+}
+
+toolset_name() {
   [ $(uname) == "Darwin" ] && echo "bsd" || echo "gnu"
 }
 
@@ -161,7 +165,7 @@ check_dependency(){
 }
 
 absolute_path() {
-  readlink -f "$1"
+  [ $(toolset_name) == "gnu" ] && readlink -f "$1" || $1
 }
 
 # check for required libraries before starting
