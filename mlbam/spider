@@ -118,6 +118,21 @@ fetchfile() {
   (( downloads % 10 == 0 )) && sleep 1
 }
 
+check_dependencies(){
+  xmllint --version > /dev/null 2>&1
+  if [ $? -gt 0 ]; then
+    echo "xmllint not found, please install it (on Ubuntu: sudo apt-get install libxml2-utils)."
+    exit 1
+  fi
+  curl --version > /dev/null 2>&1
+  if [ $? -gt 0 ]; then
+    echo "curl not found, please install it (on Ubuntu: sudo apt-get install curl)."
+    exit 1
+  fi
+}
+
+check_dependencies
+
 year=$(date +%Y)
 league=mlb
 previous=
