@@ -57,7 +57,11 @@ msg() {
 
 # takes a timestamp and format string
 formatdate() {
-  date -d "1970-01-01 $1 sec" +"$2"
+  if [ $(date_command_version) == "bsd" ]; then
+    date -j -f "%s" "$1" +"$2"
+  else
+    date -d "1970-01-01 $1 sec" +"$2"
+  fi
 }
 
 # month_xx/day_xx portion of URL or path for the given date
@@ -79,11 +83,23 @@ current_timestamp() {
 }
 
 default_start_date() {
-  date -d "$year-02-01" +%s
+  if [ $(date_command_version) == "bsd" ]; then
+    date -v2m -v1d -v0H -v0M -v0S +%s
+  else
+    date -d "$year-02-01 00:00:00" +%s
+  fi
 }
 
 default_end_date() {
-  date -d "$year-11-10" +%s
+  if [ $(date_command_version) == "bsd" ]; then
+    date -v11m -v1d -v0H -v0M -v0S +%s
+  else
+    date -d "$year-11-10 00:00:00" +%s
+  fi
+}
+
+date_command_version() {
+  [ $(uname) == "Darwin" ] && echo "bsd" || echo "gnu"
 }
 
 # ids of games played on the given date
