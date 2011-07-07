@@ -114,10 +114,7 @@ gameids() {
 
 # takes date, prints URL of game list
 game_index_url() {
-  case $league in
-    mlb) echo "$(dateurl $1)/" ;;
-    milb) echo "$(dateurl $1)/milb_master_game_file.xml" ;;
-  esac
+  echo "$(dateurl $1)/"
 }
 
 # takes date, prints content
