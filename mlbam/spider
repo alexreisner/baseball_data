@@ -180,7 +180,7 @@ check_dependency(){
 }
 
 absolute_path() {
-  [ $(toolset_name) == "gnu" ] && readlink -f "$1" || $1
+  [ $(toolset_name) == "gnu" ] && readlink -f "$1" || echo "$1"
 }
 
 # check for required libraries before starting
