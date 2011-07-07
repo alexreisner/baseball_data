@@ -113,13 +113,18 @@ gameids() {
 
 # ids of MLB games played on the given date
 mlb_gameids() {
-  html=$(curl -sf "$(dateurl $1)/")
+  sed -n 's:.*href="\(gid_[^/"]*\)/".*:\1:p' <<<"$(fetch_game_index "$(dateurl $1)/")"
+}
+
+# takes URL, prints content
+fetch_game_index() {
+  html="$(curl -sf "$1")"
   curlexit="$?"
   if (( curlexit > 0 )); then
     msg error "couldn't download $1 (curl exited with code $curlexit)"
     return 1
   fi
-  sed -n 's:.*href="\(gid_[^/"]*\)/".*:\1:p' <<<"$html"
+  echo "$html"
 }
 
 # files to download for each game
