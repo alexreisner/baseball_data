@@ -108,13 +108,8 @@ toolset_name() {
 
 # ids of games played on the given date
 gameids() {
-  "$league"_gameids $1
-}
-
-# ids of MLB games played on the given date
-mlb_gameids() {
-  sed -n 's:.*href="\(gid_[^/"]*\)/".*:\1:p' \
-    <<<"$(fetch_game_index "$(dateurl $1)/")"
+  sed -n 's:.*\(gid_[^/"]*\).*:\1:p' \
+    <<<"$(fetch_game_index "$(dateurl $1)/")" | uniq
 }
 
 # takes URL, prints content
