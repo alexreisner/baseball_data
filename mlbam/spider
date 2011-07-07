@@ -108,6 +108,11 @@ toolset_name() {
 
 # ids of games played on the given date
 gameids() {
+  "$league"_gameids $1
+}
+
+# ids of MLB games played on the given date
+mlb_gameids() {
   html=$(curl -sf "$(dateurl $1)/")
   curlexit="$?"
   if (( curlexit > 0 )); then
