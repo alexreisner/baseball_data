@@ -109,15 +109,24 @@ toolset_name() {
 # ids of games played on the given date
 gameids() {
   sed -n 's:.*\(gid_[^/"]*\).*:\1:p' \
-    <<<"$(fetch_game_index "$(dateurl $1)/")" | uniq
+    <<<"$(fetch_game_index $1)" | uniq
 }
 
-# takes URL, prints content
+# takes date, prints URL of game list
+game_index_url() {
+  case $league in
+    mlb) echo "$(dateurl $1)/" ;;
+    milb) echo "$(dateurl $1)/milb_master_game_file.xml" ;;
+  esac
+}
+
+# takes date, prints content
 fetch_game_index() {
-  html="$(curl -sf "$1")"
+  url="$(game_index_url $1)"
+  html="$(curl -sf $url)"
   curlexit="$?"
   if (( curlexit > 0 )); then
-    msg error "couldn't download $1 (curl exited with code $curlexit)"
+    msg error "couldn't download $url (curl exited with code $curlexit)"
     return 1
   fi
   echo "$html"
