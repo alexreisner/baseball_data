@@ -195,7 +195,7 @@ verbose=false
 while getopts "y:l:p:vqwth" opt; do
   case $opt in
     y) year="$OPTARG" ;;
-    l) league="$OPTARG" ;;
+    l) league="$(echo "$OPTARG" | tr '[:upper:]' '[:lower:]')" ;;
     p) previous="$OPTARG" ;;
     t) today=true ;;
     q) quiet=true ;;
