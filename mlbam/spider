@@ -113,7 +113,8 @@ gameids() {
 
 # ids of MLB games played on the given date
 mlb_gameids() {
-  sed -n 's:.*href="\(gid_[^/"]*\)/".*:\1:p' <<<"$(fetch_game_index "$(dateurl $1)/")"
+  sed -n 's:.*href="\(gid_[^/"]*\)/".*:\1:p' \
+    <<<"$(fetch_game_index "$(dateurl $1)/")"
 }
 
 # takes URL, prints content
