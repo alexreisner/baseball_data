@@ -239,7 +239,7 @@ $(formatdate "$lastdate" "%b %d"), $year) to $outputdir"
 starttime=$(current_timestamp)
 d="$firstdate"
 
-while [ $(formatdate "$d" %F) != $(formatdate "$lastdate" %F) ]; do
+while true; do
   for gid in $(gameids $d); do
     msg progress "Processing game $gid"
     gameurl="$(dateurl $d)/$gid"
@@ -251,7 +251,11 @@ while [ $(formatdate "$d" %F) != $(formatdate "$lastdate" %F) ]; do
       fi
     done
   done
-  ((d += 60*60*24))
+  if [ $(formatdate "$d" %F) == $(formatdate "$lastdate" %F) ]; then
+    break
+  else
+    ((d += 60*60*24))
+  fi
 done
 
 # announce the results
