@@ -136,6 +136,7 @@ datafiles() {
   echo "game.xml"
   echo "gameday_Syn.xml"
   echo "linescore.xml"
+  echo "inning/inning_all.xml"
 }
 
 # download a file (takes URL and filesystem path)
