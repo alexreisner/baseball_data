@@ -141,6 +141,12 @@ datafiles() {
 # download a file (takes URL and filesystem path)
 fetchfile() {
   msg detail "  $file"
+
+  # create directory if necessary
+  if [[ "$2" == */* ]]; then
+    mkdir -p "$(dirname "$2")"
+  fi
+
   curl -sf "$1" -o "$2.orig"
   curlexit="$?"
   if (( curlexit == 22 )); then
