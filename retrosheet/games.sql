@@ -172,7 +172,7 @@ CREATE TABLE `games` (
   `home_batter_9_pos` tinyint(3) NOT NULL default '0',
   `additional_info` varchar(255) NOT NULL default '',
   `acquisition` char(1) NOT NULL default '',
-  PRIMARY KEY  (`date`,`game_number`,`visitor`,`home`),
+  PRIMARY KEY  (`date`,`game_number`,`visitor`,`home`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 
