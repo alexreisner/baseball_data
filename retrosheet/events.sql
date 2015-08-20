@@ -107,7 +107,7 @@ CREATE TABLE events (
   fielder_with_fifth_assist TINYINT DEFAULT NULL,
   event_id SMALLINT NOT NULL,
   PRIMARY KEY (game_id,event_id)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 
 --
