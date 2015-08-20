@@ -178,11 +178,5 @@ CREATE TABLE `games` (
 
 --
 -- Load game data.
+-- The following is generated using load_csv_gls script.
 --
-LOAD DATA LOCAL INFILE '/path/to/data.csv'
-  INTO TABLE games
-  FIELDS TERMINATED BY ','
-  OPTIONALLY ENCLOSED BY '"'
-  LINES TERMINATED BY '\n'
-  IGNORE 0 LINES;
-
