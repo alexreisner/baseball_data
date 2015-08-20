@@ -10,7 +10,7 @@
 #   http://www.retrosheet.org/gamelogs/index.html
 #
 # Example usage:
-#   load_csv_gls ~/eventlogs events.csv [csv_load.sql]
+#   load_csv_gls ~/zip_gamelogs [csv_load.sql]
 #
 
 show_usage() {
