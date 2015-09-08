@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+#
+# This script takes a directory containing some Retrosheet game log
+# archives (eg: gl2014.zip, gl2010_14.zip), expands them, and writes
+# out a SQL file to be loaded to a database.
+# 
+# Specify the input directory and optionally an output sql file.
+#
+# Retrosheet game logs can be downloaded from:
+#   http://www.retrosheet.org/gamelogs/index.html
+#
+# Example usage:
+#   load_csv_gls ~/zip_gamelogs [csv_load.sql]
+#
+
+show_usage() {
+  echo "Usage: $0 INPUT_DIR [OUTPUT_FILE]"
+}
+
+function abspath {
+    if [[ -d "$1" ]]
+    then
+        pushd "$1" >/dev/null
+        pwd
+        popd >/dev/null
+    elif [[ -e $1 ]]
+    then
+        pushd "$(dirname "$1")" >/dev/null
+        echo "$(pwd)/$(basename "$1")"
+        popd >/dev/null
+    else
+        echo "$1" does not exist! >&2
+        return 127
+    fi
+}
+
+# exit if no INPUT_DIR given
+if [[ -z "$1" ]]; then
+  show_usage
+  exit 1
+else
+  if [[ -d "$1" ]]; then
+    zipdir="`abspath $1`"
+    echo "$zipdir"
+    shopt -s extglob
+    zipdir="${zipdir%%*(/)}"
+    shopt -u extglob
+  else
+    echo "Directory $1 not found"
+    exit 1
+  fi
+fi
+
+curdir="$PWD"
+tmpdir="$zipdir/tmp$RANDOM"
+
+# unzip archives to temp dir
+unzip "$zipdir"/\*.zip -d "$tmpdir"
+
+# choose a reasonable default OUTPUT_FILE if none given
+if [[ -z "$2" ]]; then
+  suffix="$(date +%Y-%m-%d-%H%M%S)"
+  outfile="$zipdir/csv_load.$suffix.sql"
+else
+  outfile="$zipdir/$2"
+fi
+
+# add load csv file block into sql
+cat "$curdir/games.sql" >> "$outfile"
+for f in "$tmpdir"/*.TXT; do
+
+  # downloaded gamelogs have Windows line endings that don't load properly into MySQL (skip every other row)
+  cat "$f" | tr -d '\r' > "$f.fixed"
+
+  echo "
+  LOAD DATA LOCAL INFILE '$f.fixed'
+    INTO TABLE games
+    FIELDS TERMINATED BY ','
+    OPTIONALLY ENCLOSED BY '\"'
+    LINES TERMINATED BY '\\\\n'
+    IGNORE 0 LINES;
+  " >> "$outfile"
+done
+
+echo "Output: $outfile"
