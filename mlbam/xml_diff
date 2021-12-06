@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-# newline after each tag
-command="sed s/></>\n</g"
-
-diff -w <($command "$1.orig") <($command "$1")
